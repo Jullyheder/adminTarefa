@@ -20,6 +20,14 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
+        if(Auth::user() === null)
+        {
+            return redirect()->route('login');
+        }
+        if(Auth::user()->mod_id != 1)
+        {
+            return redirect(RouteServiceProvider::HOME);
+        }
         return view('auth.register');
     }
 
@@ -33,7 +41,6 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -51,9 +58,9 @@ class RegisteredUserController extends Controller
             'mod_id' => $request->mod
         ]);
 
-        event(new Registered($user));
+        //event(new Registered($user));
 
-        Auth::login($user);
+        //Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
     }

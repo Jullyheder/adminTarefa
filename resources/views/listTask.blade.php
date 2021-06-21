@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -19,7 +19,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    Você está logado!
+                    <h1>Logado!</h1>
+                    @if (\Illuminate\Support\Facades\Auth::user()->mod_id === 1)
+                        <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 underline">Register</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -27,4 +30,3 @@
 </x-app-layout>
 </body>
 </html>
-

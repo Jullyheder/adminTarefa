@@ -18,9 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-//Route::get('/', [UserController::class, 'index'])->name('home');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/listTask', function () {
+    return view('listTask');
+})->name('listTask');
+
 
 require __DIR__.'/auth.php';
