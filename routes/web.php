@@ -28,5 +28,4 @@ Route::get('/users', [UserController::class, 'index'])->name('users')->middlewar
 // Route Categories
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories')->middleware('auth');
 
-
 require __DIR__.'/auth.php';
