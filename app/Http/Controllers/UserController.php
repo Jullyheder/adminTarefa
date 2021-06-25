@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -15,9 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        $task = Task::all();
-        $task2 = Task::where('id', 5)->first();
-        dd($task2);
+        //$task = Task::all();
+        //$task2 = Task::where('id', 5)->first();
+        //dd($task2);
+        return View('users');
     }
 
     /**
