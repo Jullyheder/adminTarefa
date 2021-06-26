@@ -39,7 +39,6 @@ class Task extends Model
         'situation_id' => 'int',
         'user_id' => 'int',
         'data_limit'  => 'datetime',
-        'annotate' => 'longtext',
     ];
 
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo

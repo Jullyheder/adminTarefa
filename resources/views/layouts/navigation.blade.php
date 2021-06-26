@@ -4,11 +4,6 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="{{ route('tasks') }}">
-                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
-                    </a>
-                </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -16,16 +11,18 @@
                         {{ __('Tarefas') }}
                     </x-nav-link>
                 </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                        {{ __('Usuários') }}
-                    </x-nav-link>
-                </div>
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('categories')" :active="request()->routeIs('categories')">
-                        {{ __('Categorias') }}
-                    </x-nav-link>
-                </div>
+                @if(Auth::user()->mod_id === 1)
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
+                            {{ __('Usuários') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <x-nav-link :href="route('categories')" :active="request()->routeIs('categories')">
+                            {{ __('Categorias') }}
+                        </x-nav-link>
+                    </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -76,12 +73,14 @@
             <x-responsive-nav-link :href="route('tasks')" :active="request()->routeIs('tasks')">
                 {{ __('Tarefas') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                {{ __('Usuário') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('categories')" :active="request()->routeIs('categories')">
-                {{ __('Categorias') }}
-            </x-responsive-nav-link>
+            @if(Auth::user()->mod_id === 1)
+                <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">
+                    {{ __('Usuário') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('categories')" :active="request()->routeIs('categories')">
+                    {{ __('Categorias') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

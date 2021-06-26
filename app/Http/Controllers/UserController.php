@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -16,10 +17,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        //$task = Task::all();
-        //$task2 = Task::where('id', 5)->first();
-        //dd($task2);
-        return View('users');
+        if (Auth::user()->mod_id === 1)
+        {
+            $users = User::all();
+
+            return View('users', [
+                'users' => $users
+            ]);
+        }
+        return redirect()->route('tasks');
     }
 
     /**

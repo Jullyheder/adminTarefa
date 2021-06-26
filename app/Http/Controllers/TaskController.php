@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -15,7 +17,20 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return View('tasks');
+        if (Auth::user()->mod_id === 1)
+        {
+            $tasks = Task::all()->sortByDesc('priority_id');
+            return View('tasks', [
+                'tasks' => $tasks,
+            ]);
+        }
+        else
+        {
+            $tasks = Task::where('user_id', Auth::user()->id)->get();
+            return View('tasks', [
+                'tasks' => $tasks,
+            ]);
+        }
     }
 
     /**
