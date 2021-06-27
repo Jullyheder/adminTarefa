@@ -1,0 +1,44 @@
+.userRegister{
+    display: flex;
+    justify-content: flex-end;
+}
+.register{
+    background-color: #4D8B31;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 32px;
+}
+.attribute{
+    display: flex;
+    justify-content: space-around;
+}
+.attribute a, .attribute button{
+    padding: 5px;
+    font-size: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #fff;
+}
+.attEdit{
+    background-color: #1e212b;
+}
+.attDelete{
+    background-color: #e63946;
+}
+/*------------events------------*/
+
+.register:hover{
+    color: #1e212b;
+}
+.attEdit:hover{
+    color: #e63946;
+}
+.attDelete:hover{
+    color: #1e212b;
+}

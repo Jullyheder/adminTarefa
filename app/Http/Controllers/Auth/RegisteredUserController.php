@@ -51,8 +51,8 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => strtolower($request->name),
+            'email' => strtolower($request->email),
             'password' => Hash::make($request->password),
             'nameComplete' => $request->nameComplete,
             'mod_id' => $request->mod
@@ -62,6 +62,6 @@ class RegisteredUserController extends Controller
 
         //Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('users');
     }
 }

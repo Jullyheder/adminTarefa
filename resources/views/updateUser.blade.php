@@ -5,13 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cadastrar Usuário</title>
+    <title>Editar Usuário</title>
 </head>
 <body>
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Cadastrar Usuário') }}
+            {{ __('Editar Usuário') }}
         </h2>
     </x-slot>
 
@@ -24,21 +24,21 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('updateuser', ['user' => $user->id]) }}">
             @csrf
-
+            @method('PUT')
             <!-- Name -->
                 <div>
                     <x-label for="name" :value="__('Usuário')" />
 
-                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                    <x-input id="name" class="block mt-1 w-full" type="text" name="name" value="{{ $user->name }}" required autofocus />
                 </div>
 
                 <!-- Email Address -->
                 <div class="mt-4">
                     <x-label for="email" :value="__('Email')" />
 
-                    <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+                    <x-input id="email" class="block mt-1 w-full" type="email" name="email" value="{{ $user->email }}" required />
                 </div>
 
                 <!-- Name Complete -->
@@ -47,7 +47,7 @@
 
                     <x-input id="nameComplete" class="block mt-1 w-full"
                              type="text"
-                             name="nameComplete" required />
+                             name="nameComplete" value="{{ $user->nameComplete }}" required />
                 </div>
 
                 <!-- Mod -->
@@ -58,39 +58,19 @@
                         </div>
                         <div>
                             <div>
-                                <input id="1" type="radio" name="mod" value="1" required />
+                                <input id="1" type="radio" name="mod_id" value="1" {{ $user->mod_id === 1 ? 'checked' : '' }} required />
                                 <label for="1">Administrador</label>
                             </div>
                             <div>
-                                <input id="2" type="radio" name="mod" value="2" required />
+                                <input id="2" type="radio" name="mod_id" value="2" {{ $user->mod_id === 2 ? 'checked' : '' }} required />
                                 <label for="2">Usuário</label>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Password -->
-                <div class="mt-4">
-                    <x-label for="password" :value="__('Senha')" />
-
-                    <x-input id="password" class="block mt-1 w-full"
-                             type="password"
-                             name="password"
-                             required autocomplete="new-password" />
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="mt-4">
-                    <x-label for="password_confirmation" :value="__('Confirmar Senha')" />
-
-                    <x-input id="password_confirmation" class="block mt-1 w-full"
-                             type="password"
-                             name="password_confirmation" required />
-                </div>
-
                 <div class="flex items-center justify-end mt-4">
                     <x-button class="ml-4">
-                        {{ __('Register') }}
+                        {{ __('Editar') }}
                     </x-button>
                 </div>
             </form>

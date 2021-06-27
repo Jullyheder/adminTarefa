@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Usuário</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}">
 </head>
 <body>
     <x-app-layout>
@@ -17,40 +18,49 @@
         </x-slot>
 
         <div class="py-12">
+            @if($errors->all())
+                @foreach($errors as $error)
+                    <div class="alert alert-danger" role="alert">
+                        {{ $error }}
+                    </div>
+                @endforeach
+            @endif
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
-                        <div>
-                            <a href="{{ route('caduser') }}">+</a>
+                        <div class="userRegister">
+                            <a href="{{ route('caduser') }}" class="register" title="Registrar Usuário">+</a>
                         </div>
                         <div>
-                            <table class="table">
+                            <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
+                                    <th scope="col">Usuário</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Nome Completo</th>
+                                    <th scope="col">Modo</th>
+                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td colspan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                @foreach($users as $user)
+                                    <tr>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->nameComplete }}</td>
+                                        <td>{{ $user->mod->mod_desc }}</td>
+                                        <td class="attribute">
+                                            <a href="{{ route('edituser', ['user' => $user->id]) }}" class="attEdit" title="Editar Usuário">Editar</a>
+                                            <form action="{{ route('delUsers', ['user' => $user->id]) }}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="attDelete" onclick="return confirm('Deseja realmente excluir o usuário: ({{ $user->nameComplete }})');">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>

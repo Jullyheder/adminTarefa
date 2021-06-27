@@ -25,7 +25,10 @@ Route::get('tasks', [TaskController::class, 'index'])->name('tasks')->middleware
 
 // Route User
 Route::get('/users', [UserController::class, 'index'])->name('users')->middleware('auth');
-Route::get('cadUser', function () { if(Auth::user()->mod_id === 1) { return view('cadUser'); } })->name('caduser')->middleware('auth');
+Route::get('/cadUser', function () { if(Auth::user()->mod_id === 1) { return view('cadUser'); } })->name('caduser')->middleware('auth');
+Route::get('/editUser/{user}', [UserController::class, 'edit'])->name('edituser')->middleware('auth');
+Route::put('/editUser/{user}', [UserController::class, 'update'])->name('updateuser')->middleware('auth');
+Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('delUsers');
 
 // Route Categories
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories')->middleware('auth');
