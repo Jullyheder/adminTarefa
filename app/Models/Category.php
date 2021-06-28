@@ -27,7 +27,7 @@ class Category extends Model
      * @var array
      */
     protected $casts = [
-        'category_desc' => 'String',
+        'category_desc' => 'string',
         'priority_id' => 'int'
     ];
 

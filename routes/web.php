@@ -32,5 +32,10 @@ Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name
 
 // Route Categories
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories')->middleware('auth');
+Route::get('/cadCategory', [CategoryController::class, 'create'])->name('cadcategory')->middleware('auth');
+Route::get('/editCategory/{category}', [CategoryController::class, 'edit'])->name('editcategory')->middleware('auth');
+Route::post('/cadCategory', [CategoryController::class, 'store'])->name('inscategory')->middleware('auth');
+Route::put('/editCategory/{category}', [CategoryController::class, 'update'])->name('updatecategory')->middleware('auth');
+Route::delete('/category/destroy/{category}', [CategoryController::class, 'destroy'])->name('delcategory');
 
 require __DIR__.'/auth.php';

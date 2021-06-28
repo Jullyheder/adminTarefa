@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Priority;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
@@ -15,7 +18,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return View('categories');
+        if (Auth::user()->mod_id === 1)
+        {
+            $categories = Category::all()->sortByDesc('priority_id');
+
+            return View('categories', [
+                'categories' => $categories
+            ]);
+        }
+        return redirect()->route('tasks');
     }
 
     /**
@@ -25,7 +36,15 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        if (Auth::user()->mod_id === 1)
+        {
+            $priorities = Priority::all()->sortBy('priority_id');
+
+            return View('cadCategory', [
+                'priorities' => $priorities
+            ]);
+        }
+        return redirect()->route('tasks');
     }
 
     /**
@@ -36,7 +55,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if (Auth::user()->mod_id === 1)
+        {
+            $credentials = $request->validate([
+                'category_desc' => 'required|string|max:255|unique:categories',
+                'priority_id' => 'required|int'
+            ]);
+            if(Category::create($credentials))
+            {
+                return redirect()->route('categories');
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Error ao cadastrar categoria!']);
+            }
+        }
+        return redirect()->route('tasks');
     }
 
     /**
@@ -58,7 +92,15 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        if (Auth::user()->mod_id === 1)
+        {
+            $priorities = Priority::all()->sortBy('priority_id');
+            return view('updateCategory', [
+                'category' => $category,
+                'priorities' => $priorities
+            ]);
+        }
+        return redirect()->route('tasks');
     }
 
     /**
@@ -70,7 +112,23 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        if (Auth::user()->mod_id === 1)
+        {
+            $credentials = $request->validate([
+                'category_desc' => 'required|string|max:255|unique:categories',
+                'priority_id' => 'required|int'
+
+            ]);
+            if($category->update($credentials))
+            {
+                return redirect()->route('categories');
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Error ao Atualizar Categoria: '.$category->category_desc]);
+            }
+        }
+        return redirect()->route('tasks');
     }
 
     /**
@@ -81,6 +139,17 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        if (Auth::user()->mod_id === 1)
+        {
+            if ($category->delete())
+            {
+                return redirect()->route('categories');
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Error ao Deletar categoria']);
+            }
+        }
+        return redirect()->route('tasks');
     }
 }
