@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Priority;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,10 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        $priorities = Priority::all()->sortBy('priority_id');
+        return view('cadTask', [
+            'priorities' => $priorities
+        ]);
     }
 
     /**
@@ -97,5 +101,30 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+    }
+
+    public function autocomplete()
+    {
+        return view('autocomplete');
+    }
+
+    public function getautocomplete(Request $request)
+    {
+        //dd($request);
+        $search = $request->search;
+
+        if($search == ''){
+            $autocomplate = Category::orderby('category_desc','asc')->select('id','category_desc','priority_id')->limit(5)->get();
+        }else{
+            $autocomplate = Category::orderby('category_desc','asc')->select('id','category_desc','priority_id')->where('category_desc', 'like', '%' .$search . '%')->limit(5)->get();
+        }
+
+        $response = array();
+        foreach($autocomplate as $autocomplate){
+            $response[] = array("value"=>$autocomplate->id,"label"=>$autocomplate->category_desc,"priority"=>$autocomplate->priority_id);
+        }
+        //dd($response);
+        echo json_encode($response);
+        exit;
     }
 }

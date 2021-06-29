@@ -31,6 +31,12 @@
 .attDelete{
     background-color: #e63946;
 }
+.form-label {
+    font-size: 14px;
+}
+.form-text {
+    font-size: 11px;
+}
 /*------------events------------*/
 
 .register:hover{

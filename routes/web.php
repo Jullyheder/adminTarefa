@@ -22,6 +22,11 @@ Route::get('/', function () {
 
 // Route Task
 Route::get('tasks', [TaskController::class, 'index'])->name('tasks')->middleware('auth');
+Route::get('/cadTask', [TaskController::class, 'create'])->name('cadtask')->middleware('auth');
+
+//Route Task Autocomplete
+//Route::get('/categoryAutocomplete', [TaskController::class, 'autocomplete'])->name('categoryautocomplete')->middleware('auth');
+Route::post('/getautocomplete', [TaskController::class, 'getautocomplete'])->name('getautocomplete')->middleware('auth');
 
 // Route User
 Route::get('/users', [UserController::class, 'index'])->name('users')->middleware('auth');
