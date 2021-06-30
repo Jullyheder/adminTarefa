@@ -55,7 +55,30 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->data_limit !== null)
+        {
+            if (strtotime($request->data_limit) < strtotime(date('d-m-Y')))
+            {
+                return redirect()->back()->withErrors(['Data limite informada não pode ser menor que a data atual']);
+            }
+        }
+        $credentials = $request->validate([
+            'task_desc' => 'required|string|max:255',
+            'category_id' => 'int',
+            'priority_id' => 'required|int',
+            'data_limit' => 'date',
+            'annotate' => 'string|max:1500'
+        ]);
+        $credentials['situation_id'] = 1;
+        $credentials['user_id'] = Auth::user()->id;
+        if(Task::create($credentials))
+        {
+            return redirect()->route('tasks');
+        }
+        else
+        {
+            return redirect()->back()->withErrors(['Error ao cadastrar tarefa!']);
+        }
     }
 
     /**
@@ -100,12 +123,36 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
-    }
+        if (Auth::user()->mod_id === 1)
+        {
+            if ($task->delete())
+            {
+                return redirect()->route('tasks');
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Error ao deletar tarefa']);
+            }
+        }
+        else
+        {
+            if ($task->user_id === Auth::user()->id)
+            {
+                if ($task->delete())
+                {
+                    return redirect()->route('tasks');
+                }
+                else
+                {
+                    return redirect()->back()->withErrors(['Error ao deletar tarefa']);
+                }
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Sem permissão para deletar essa tarefa']);
+            }
+        }
 
-    public function autocomplete()
-    {
-        return view('autocomplete');
     }
 
     public function getautocomplete(Request $request)

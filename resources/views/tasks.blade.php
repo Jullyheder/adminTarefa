@@ -19,6 +19,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Validation Errors -->
+            <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="userRegister">
@@ -34,7 +36,6 @@
                                     <th scope="col">Situação</th>
                                     <th scope="col">Usuário</th>
                                     <th scope="col">Data Limite</th>
-                                    <th scope="col">Anotação</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -47,9 +48,15 @@
                                     <td>{{ $task->situation->situation_desc }}</td>
                                     <td>{{ $task->user->nameComplete }}</td>
                                     <td>{{ $task->data_limit->format('d/m/Y') }}</td>
-                                    <td>{{ $task->annotate }}</td>
-                                    <td>
-
+                                    <td class="attribute">
+                                        <a href="{{ route('edittask', ['task' => $task->id]) }}" class="attEdit" title="Editar Usuário">Editar</a>
+                                        <form action="{{ route('deltask', ['task' => $task->id]) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="attDelete" onclick="return confirm('Deseja realmente excluir a tarefa: ({{ $task->task_desc }})');">
+                                                Excluir
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

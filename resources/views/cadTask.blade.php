@@ -27,18 +27,18 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('instask') }}">
             @csrf
 
                 <div class="mb-3">
                     <label for="task_desc" class="form-label">Descrição</label>
-                    <textarea name="task_desc" class="form-control" id="task_desc" rows="1"></textarea>
+                    <textarea name="task_desc" class="form-control" id="task_desc" rows="1" required></textarea>
                 </div>
 
                 <div class="mb-3">
                     <x-label for="category_desc" :value="__('Categoria')" />
 
-                    <x-input id="category_id" class="block mt-1 w-full" type="number" name="category_id" disabled style="display: none;"/>
+                    <x-input id="category_id" class="block mt-1 w-full" type="number" name="category_id" style="display: none"/>
                     <x-input id="category" class="block mt-1 w-full" type="text" name="category_desc" />
                     <div id="category_desc" class="form-text">(Opcional)</div>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="mb-3">
                     <x-label for="priority_id" :value="__('Prioridade')" />
 
-                    <select id="priority_id" name="priority_id" class="form-select" aria-label="Default select example">
+                    <select id="priority_id" name="priority_id" class="form-select" aria-label="Default select example" required>
                         @foreach($priorities as $priority)
                             <option value="{{ $priority->id }}">{{ $priority->priority_desc }}</option>
                         @endforeach
@@ -56,7 +56,7 @@
                 <div class="mb-3">
                     <x-label for="data_limit" :value="__('Data Limite')" />
 
-                    <x-input id="data_limit" class="block mt-1 w-full" type="date" name="data_limit" min="{{ date('d/m/Y') }}"/>
+                    <x-input id="data_limit" class="block mt-1 w-full" type="date" name="data_limit"/>
                     <div id="data_limit" class="form-text">(Opcional)</div>
                 </div>
 
@@ -83,7 +83,7 @@
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function(){
         $( "#category" ).autocomplete({
-            source: function( request, response ) {;
+            source: function( request, response ) {
                 // Fetch data
                 $.ajax({
                     url:"{{route('getautocomplete')}}",
