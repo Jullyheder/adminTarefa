@@ -1,6 +1,7 @@
 .userRegister{
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 5px;
 }
 .register{
     background-color: #4D8B31;
@@ -36,6 +37,22 @@
 }
 .form-text {
     font-size: 11px;
+}
+#toView{
+    cursor: pointer;
+}
+.card.text-dark.bg-light.mb-3{
+    width: 25%;
+}
+.card-header {
+    font-weight: bold;
+    font-size: 18px;
+}
+#search{
+    width: 25%;
+    border-radius: 10px;
+    border-color: #dee2e6;
+    text-align: center;
 }
 /*------------events------------*/
 

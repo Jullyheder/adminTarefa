@@ -24,12 +24,14 @@ Route::get('/', function () {
 Route::get('tasks', [TaskController::class, 'index'])->name('tasks')->middleware('auth');
 Route::get('/cadTask', [TaskController::class, 'create'])->name('cadtask')->middleware('auth');
 Route::get('/editTask/{task}', [TaskController::class, 'edit'])->name('edittask')->middleware('auth');
+Route::get('/toViewTask/{task}', [TaskController::class, 'toviewtask'])->name('toviewtask')->middleware('auth');
 Route::post('/cadTask', [TaskController::class, 'store'])->name('instask')->middleware('auth');
 Route::put('/editTask/{task}', [TaskController::class, 'update'])->name('updatetask')->middleware('auth');
 Route::delete('/Tasks/destroy/{task}', [TaskController::class, 'destroy'])->name('deltask')->middleware('auth');;
 
-//Route Task Autocomplete
+//Route Task Autocomplete and search
 Route::post('/getautocomplete', [TaskController::class, 'getautocomplete'])->name('getautocomplete')->middleware('auth');
+Route::post('/getsearch', [TaskController::class, 'getsearch'])->name('getsearch')->middleware('auth');
 
 // Route User
 Route::get('/users', [UserController::class, 'index'])->name('users')->middleware('auth');

@@ -20,7 +20,8 @@ class TaskController extends Controller
     {
         if (Auth::user()->mod_id === 1)
         {
-            $tasks = Task::all()->sortByDesc('priority_id');
+            //$tasks = Task::all()->sortByDesc('priority_id'); //data_limit
+            $tasks = Task::orderBy('priority_id', 'DESC')->orderBy('data_limit', 'DESC')->get(); //data_limit
             return View('tasks', [
                 'tasks' => $tasks,
             ]);
@@ -64,13 +65,23 @@ class TaskController extends Controller
         }
         $credentials = $request->validate([
             'task_desc' => 'required|string|max:255',
-            'category_id' => 'int',
             'priority_id' => 'required|int',
-            'data_limit' => 'date',
-            'annotate' => 'string|max:1500'
         ]);
+        if($request->category_id !== null && $request->category_desc !== null)
+        {
+            $credentials['category_id'] = $request->category_id;
+        }
+        if($request->data_limit !== null)
+        {
+            $credentials['data_limit'] = $request->data_limit;
+        }
+        if($request->annotate !== null)
+        {
+            $credentials['annotate'] = $request->annotate;
+        }
         $credentials['situation_id'] = 1;
         $credentials['user_id'] = Auth::user()->id;
+
         if(Task::create($credentials))
         {
             return redirect()->route('tasks');
@@ -100,7 +111,28 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $priorities = Priority::all()->sortBy('priority_id');
+        if (Auth::user()->mod_id === 1)
+        {
+            return view('updateTask', [
+                'task' => $task,
+                'priorities' => $priorities
+            ]);
+        }
+        else
+        {
+            if ($task->user_id === Auth::user()->id)
+            {
+                return view('updateTask', [
+                    'task' => $task,
+                    'priorities' => $priorities
+                ]);
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Sem permissão para deletar essa tarefa']);
+            }
+        }
     }
 
     /**
@@ -112,7 +144,54 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        //dd($request, $task);
+        $credentials = $request->validate([
+            'task_desc' => 'required|string|max:255',
+            'priority_id' => 'required|int',
+        ]);
+        if($request->category_id !== null && $request->category_desc !== null)
+        {
+            $credentials['category_id'] = $request->category_id;
+        }
+        if($request->data_limit !== null)
+        {
+            $credentials['data_limit'] = $request->data_limit;
+        }
+        if($request->annotate !== null)
+        {
+            $credentials['annotate'] = $request->annotate;
+        }
+        $credentials['situation_id'] = 1;
+        $credentials['user_id'] = Auth::user()->id;
+        if (Auth::user()->mod_id === 1)
+        {
+            if($task->update($credentials))
+            {
+                return redirect()->route('tasks');
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Error ao atualizar tarefa: '.$task->task_desc]);
+            }
+        }
+        else
+        {
+            if ($task->user_id === Auth::user()->id)
+            {
+                if($task->update($credentials))
+                {
+                    return redirect()->route('tasks');
+                }
+                else
+                {
+                    return redirect()->back()->withErrors(['Error ao atualizar tarefa: '.$task->task_desc]);
+                }
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Sem permissão para deletar essa tarefa']);
+            }
+        }
     }
 
     /**
@@ -173,5 +252,33 @@ class TaskController extends Controller
         //dd($response);
         echo json_encode($response);
         exit;
+    }
+
+    public function toviewtask(Task $task)
+    {
+        if (Auth::user()->mod_id === 1)
+        {
+            return view('toViewTask', [
+                'task' => $task
+            ]);
+        }
+        else
+        {
+            if ($task->user_id === Auth::user()->id)
+            {
+                return view('toViewTask', [
+                    'task' => $task
+                ]);
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Sem permissão para deletar essa tarefa']);
+            }
+        }
+    }
+
+    public function getsearch(Request $request)
+    {
+        dd($request);
     }
 }

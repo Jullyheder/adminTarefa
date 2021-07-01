@@ -8,6 +8,7 @@
     <title>Tarefas</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}">
 </head>
 <body>
 <x-app-layout>
@@ -23,7 +24,8 @@
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="userRegister">
+                    <div class="userRegister" style="justify-content: space-between;">
+                        <input type="text" class="form-control" id="search" name="search" placeholder="Procurar..."/>
                         <a href="{{ route('cadtask') }}" class="register" title="Cadastrar Tarefa">+</a>
                     </div>
                     <div>
@@ -41,13 +43,13 @@
                             </thead>
                             <tbody>
                             @foreach($tasks as $task)
-                                <tr>
+                                <tr onClick="toTake({{ $task->id }})" id="toView">
                                     <td>{{ $task->task_desc }}</td>
-                                    <td>{{ $task->category->category_desc }}</td>
+                                    <td>{{ $task->category_id !== null ? $task->category->category_desc : '' }}</td>
                                     <td>{{ $task->priority->priority_desc }}</td>
                                     <td>{{ $task->situation->situation_desc }}</td>
                                     <td>{{ $task->user->nameComplete }}</td>
-                                    <td>{{ $task->data_limit->format('d/m/Y') }}</td>
+                                    <td>{{ $task->data_limit !== null ? $task->data_limit->format('d/m/Y') : '' }}</td>
                                     <td class="attribute">
                                         <a href="{{ route('edittask', ['task' => $task->id]) }}" class="attEdit" title="Editar Usuário">Editar</a>
                                         <form action="{{ route('deltask', ['task' => $task->id]) }}" method="post">
@@ -71,5 +73,28 @@
 
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script src="{{ asset('js/jquery.js') }}"></script>
+<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+<script type="text/javascript">
+    // CSRF Token
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    function toTake(id){
+        let url = "{{ route('toviewtask', ':id') }}";
+        url = url.replace(':id', id);
+        document.location.href=url;
+    }
+    $("#search").keyup(function (e) {
+        let text = $('#search').val();
+        if(text.length > 2){
+            $.ajax({
+                url:"{{route('getsearch')}}",
+                type: 'post',
+                dataType: "json",
+                data: {
+                    _token: CSRF_TOKEN,
+                },
+            });
+        }
+    })
+</script>
 </body>
 </html>
