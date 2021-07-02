@@ -48,7 +48,7 @@
     font-weight: bold;
     font-size: 18px;
 }
-#search{
+#searchName, #searchPriority, #searchSituation{
     width: 25%;
     border-radius: 10px;
     border-color: #dee2e6;

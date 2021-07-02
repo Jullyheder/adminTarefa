@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Priority;
+use App\Models\Situation;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class TaskController extends Controller
@@ -18,19 +21,24 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $priorities = Priority::all();
+        $situations = Situation::all();
         if (Auth::user()->mod_id === 1)
         {
-            //$tasks = Task::all()->sortByDesc('priority_id'); //data_limit
-            $tasks = Task::orderBy('priority_id', 'DESC')->orderBy('data_limit', 'DESC')->get(); //data_limit
+            $tasks = Task::orderBy('priority_id', 'DESC')->orderBy('data_limit', 'ASC')->get();
             return View('tasks', [
                 'tasks' => $tasks,
+                'priorities' => $priorities,
+                'situations' => $situations,
             ]);
         }
         else
         {
-            $tasks = Task::where('user_id', Auth::user()->id)->get();
+            $tasks = Task::where('user_id', Auth::user()->id)->orderBy('priority_id', 'DESC')->orderBy('data_limit', 'DESC')->get();
             return View('tasks', [
                 'tasks' => $tasks,
+                'priorities' => $priorities,
+                'situations' => $situations,
             ]);
         }
     }
@@ -279,6 +287,38 @@ class TaskController extends Controller
 
     public function getsearch(Request $request)
     {
-        dd($request);
+        if (Auth::user()->mod_id === 1)
+        {
+            $task = DB::table('tasks')
+                ->join('categories', 'category_id', '=', 'categories.id')
+                ->join('priorities', 'tasks.priority_id', '=', 'priorities.id')
+                ->join('situations', 'situation_id', '=', 'situations.id')
+                ->join('users', 'user_id', '=', 'users.id')
+                ->select('tasks.*', 'categories.category_desc', 'priorities.priority_desc', 'situations.situation_desc', 'users.nameComplete')
+                ->where('users.nameComplete', 'like', $request->searchName.'%')
+                ->Where('tasks.priority_id', 'like', $request->searchPriority.'%')
+                ->Where('tasks.situation_id', 'like', $request->searchSituation.'%')
+                ->orderBy('priority_id', 'DESC')
+                ->orderBy('data_limit', 'ASC')
+                ->get();
+            echo json_encode($task);
+        }
+        else
+        {
+            $task = DB::table('tasks')
+                ->join('categories', 'category_id', '=', 'categories.id')
+                ->join('priorities', 'tasks.priority_id', '=', 'priorities.id')
+                ->join('situations', 'situation_id', '=', 'situations.id')
+                ->join('users', 'user_id', '=', 'users.id')
+                ->select('tasks.*', 'categories.category_desc', 'priorities.priority_desc', 'situations.situation_desc', 'users.nameComplete')
+                ->where('users.nameComplete', 'like', $request->searchName.'%')
+                ->Where('tasks.priority_id', 'like', $request->searchPriority.'%')
+                ->Where('tasks.situation_id', 'like', $request->searchSituation.'%')
+                ->where('user_id', Auth::user()->id)
+                ->orderBy('priority_id', 'DESC')
+                ->orderBy('data_limit', 'ASC')
+                ->get();
+            echo json_encode($task);
+        }
     }
 }
