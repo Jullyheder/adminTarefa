@@ -62,7 +62,13 @@
                                         <td>{{ $task->task_desc }}</td>
                                         <td>{{ $task->category_id !== null ? $task->category->category_desc : '' }}</td>
                                         <td>{{ $task->priority->priority_desc }}</td>
-                                        <td>{{ $task->situation->situation_desc }}</td>
+                                        <td id="notClick">
+                                            <select id="situation_id{{ $task->id }}" name="situation_id" class="form-select" aria-label="Default select example" onchange="changeSituation({{ $task->id }})">
+                                                @foreach($situations as $situation)
+                                                    <option value="{{ $situation->id }}" {{ $task->situation_id === $situation->id ? 'selected' : '' }}>{{ $situation->situation_desc }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td>{{ $task->user->nameComplete }}</td>
                                         <td>{{ $task->data_limit !== null ? $task->data_limit->format('d/m/Y') : '' }}</td>
                                         <td class="attribute">
@@ -99,19 +105,53 @@
     var Name = '';
     var Priority = '';
     var Situation = '';
+    var column = '';
 
+    $(document).ready(function(){
+        Name = $('#searchName').val();
+        Priority = $('#searchPriority').val();
+        Situation = $('#searchSituation').val();
+        searchQuery();
+    });
+    $('td').click(function(){
+        column = $(this).parent().children().index($(this));
+    });
+    function changeSituation(id){
+        //console.log(id);
+        //console.log($("#situation_id"+id+"").val());
+        let valueSelected = $("#situation_id"+id+"").val();
+        let url = "{{ route('editTaskSituation', ['task' => ':task']) }}";
+        url = url.replace(':task', id);
+        $.ajax({
+            url: url,
+            type: "post",
+            data: {
+                _token: CSRF_TOKEN,
+                _method: 'PUT',
+                situation_id: valueSelected,
+            },
+            dataType: 'json',
+        })
+    }
     function toTake(id){
         // visualizar informações
-        let url = "{{ route('toviewtask', ':id') }}";
-        url = url.replace(':id', id);
-        document.location.href=url;
+        if(column !== 3){
+            let url = "{{ route('toviewtask', ':id') }}";
+            url = url.replace(':id', id);
+            document.location.href=url;
+        }
     }
     function fill(value){
         // montar busca
-        console.log(value);
         $("#tableAdd table").remove().slideUp();
         let rowTable = '';
+        let editRota = '';
+        let deleteRota = '';
         value.map(function(val){
+            editRota = "{{ route('edittask', ['task' => ':task']) }}";
+            editRota = editRota.replace(":task", val.id);
+            deleteRota = "{{ route('deltask', ['task' => ':task']) }}";
+            deleteRota = deleteRota.replace(":task", val.id);
             rowTable +=
             '<tr onClick="toTake('+ val.id +')" id="toView">' +
                 '<td>'+ val.task_desc +'</td>' +
@@ -120,6 +160,16 @@
                 '<td>'+ val.situation_desc +'</td>' +
                 '<td>'+ val.nameComplete +'</td>' +
                 '<td>'+ val.data_limit +'</td>' +
+                '<td class="attribute">' +
+                '<a href="'+ editRota +'" class="attEdit" title="Editar Usuário">Editar</a>' +
+                '<form action="'+ deleteRota +'" method="post">' +
+                '@csrf' +
+                '@method('delete')' +
+                '<button type="submit" class="attDelete" onclick="return confirm('+'Deseja realmente excluir a tarefa: ('+val.task_desc+')'+');">' +
+                'Excluir' +
+                '</button>' +
+                '</form>' +
+                '</td>' +
             '</tr>'
         });
         $("#tableAdd").append('<table class="table table-bordered">' +
@@ -141,7 +191,6 @@
     }
     function searchQuery(){
         // retorno de informações
-        //console.log(Name + ' - ' + Priority + ' - ' + Situation);
         if(Name !== '' || Priority !== '' || Situation !== ''){
             $("#tableRemove").slideUp();
             $.ajax({
@@ -162,6 +211,7 @@
         else{
             $("#tableAdd table").remove().slideUp();
             $("#tableRemove").slideDown();
+            Name = '';
         }
     }
     $("#searchPriority").change(function () {
@@ -176,7 +226,6 @@
     });
     $("#searchName").keyup(function () {
         let textName = $('#searchName').val();
-        console.log(textName);
         if(textName.length > 2){
             Name = textName;
             searchQuery();

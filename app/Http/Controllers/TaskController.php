@@ -321,4 +321,34 @@ class TaskController extends Controller
             echo json_encode($task);
         }
     }
+
+    public function editTaskSituation(Request $request, Task $task)
+    {
+        //dd($request->situation_id, $task);
+
+        $credentials = $request->validate([
+            'situation_id' => 'required|int',
+        ]);
+        if (Auth::user()->mod_id === 1)
+        {
+            if(!$task->update($credentials))
+            {
+                return redirect()->withErrors(['Error ao atualizar tarefa: '.$task->task_desc]);
+            }
+        }
+        else
+        {
+            if ($task->user_id === Auth::user()->id)
+            {
+                if(!$task->update($credentials))
+                {
+                    return redirect()->withErrors(['Error ao atualizar tarefa: '.$task->task_desc]);
+                }
+            }
+            else
+            {
+                return redirect()->back()->withErrors(['Sem permissão para deletar essa tarefa']);
+            }
+        }
+    }
 }

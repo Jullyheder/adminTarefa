@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\newMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,12 +23,13 @@ Route::get('/', function () {
 });
 
 // Route Task
-Route::get('tasks', [TaskController::class, 'index'])->name('tasks')->middleware('auth');
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks')->middleware('auth');
 Route::get('/cadTask', [TaskController::class, 'create'])->name('cadtask')->middleware('auth');
 Route::get('/editTask/{task}', [TaskController::class, 'edit'])->name('edittask')->middleware('auth');
 Route::get('/toViewTask/{task}', [TaskController::class, 'toviewtask'])->name('toviewtask')->middleware('auth');
 Route::post('/cadTask', [TaskController::class, 'store'])->name('instask')->middleware('auth');
 Route::put('/editTask/{task}', [TaskController::class, 'update'])->name('updatetask')->middleware('auth');
+Route::put('/editTaskSituation/{task}', [TaskController::class, 'editTaskSituation'])->name('editTaskSituation')->middleware('auth');
 Route::delete('/Tasks/destroy/{task}', [TaskController::class, 'destroy'])->name('deltask')->middleware('auth');;
 
 //Route Task Autocomplete and search
@@ -47,5 +50,11 @@ Route::get('/editCategory/{category}', [CategoryController::class, 'edit'])->nam
 Route::post('/cadCategory', [CategoryController::class, 'store'])->name('inscategory')->middleware('auth');
 Route::put('/editCategory/{category}', [CategoryController::class, 'update'])->name('updatecategory')->middleware('auth');
 Route::delete('/category/destroy/{category}', [CategoryController::class, 'destroy'])->name('delcategory')->middleware('auth');;
+
+// Route Mail
+/*Route::get('/envious-mail', function (){
+    //return new newMail();
+    Mail::send(new newMail());
+});*/
 
 require __DIR__.'/auth.php';
