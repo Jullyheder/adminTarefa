@@ -117,8 +117,6 @@
         column = $(this).parent().children().index($(this));
     });
     function changeSituation(id){
-        //console.log(id);
-        //console.log($("#situation_id"+id+"").val());
         let valueSelected = $("#situation_id"+id+"").val();
         let url = "{{ route('editTaskSituation', ['task' => ':task']) }}";
         url = url.replace(':task', id);
@@ -131,7 +129,20 @@
                 situation_id: valueSelected,
             },
             dataType: 'json',
-        })
+        });
+        let valueSelEmail = $("#situation_id"+id+"").val();
+        let urlEmail = "{{ route('editTaskSituation', ['task' => ':task']) }}";
+        url = url.replace(':task', id);
+        $.ajax({
+            url: urlEmail,
+            type: "post",
+            data: {
+                _token: CSRF_TOKEN,
+                _method: 'PUT',
+                situation_id: valueSelEmail,
+            },
+            dataType: 'json',
+        });
     }
     function toTake(id){
         // visualizar informações

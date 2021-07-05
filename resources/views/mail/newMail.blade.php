@@ -1,3 +1,5 @@
-<h1>Saiu</h1>
+@component('mail::message')
+    <h1>Foi feita alteração na Tarefa: {{ $task->task_desc }}</h1>
 
-<p>Salve Salve</p>
+    Situação: {{ $task->situation->situation_desc }}
+@endcomponent

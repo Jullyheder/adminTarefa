@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Mail\newMail;
+;
+use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -52,9 +52,10 @@ Route::put('/editCategory/{category}', [CategoryController::class, 'update'])->n
 Route::delete('/category/destroy/{category}', [CategoryController::class, 'destroy'])->name('delcategory')->middleware('auth');;
 
 // Route Mail
-/*Route::get('/envious-mail', function (){
-    //return new newMail();
-    Mail::send(new newMail());
-});*/
+Route::get('/sendMail/{task}', function (Task $task){
+    //return new newMail($task);
+    dispatch(new \App\Jobs\newMail($task))->delay(now());
+    //return Mail::send(new \App\Mail\newMail($task));
+});
 
 require __DIR__.'/auth.php';
