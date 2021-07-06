@@ -130,18 +130,17 @@
             },
             dataType: 'json',
         });
-        let valueSelEmail = $("#situation_id"+id+"").val();
-        let urlEmail = "{{ route('editTaskSituation', ['task' => ':task']) }}";
-        url = url.replace(':task', id);
+        //let valueSelEmail = $("#situation_id"+id+"").val();
+        let urlEmail = "{{ route('sendMail', ['task' => ':task']) }}";
+        urlEmail = urlEmail.replace(':task', id);
         $.ajax({
             url: urlEmail,
-            type: "post",
-            data: {
+            type: "get",
+            /*data: {
                 _token: CSRF_TOKEN,
-                _method: 'PUT',
                 situation_id: valueSelEmail,
             },
-            dataType: 'json',
+            dataType: 'json',*/
         });
     }
     function toTake(id){

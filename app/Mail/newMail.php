@@ -35,8 +35,10 @@ class newMail extends Mailable
             ->whereNotIn('situation_id', [3, 4])
             ->get();*/
 
-        return $this->markdown('mail.newMail', [
-            'task' => $this->task
-        ]);
+        $task = $this->task;
+        $users = User::where('mod_id', 1)->select('email')->get();
+        $this->subject('Informações de Tarefas');
+        $this->to($users);
+        return $this->markdown('mail.newMail', compact('task'));
     }
 }

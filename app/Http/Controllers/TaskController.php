@@ -23,6 +23,7 @@ class TaskController extends Controller
     {
         $priorities = Priority::all();
         $situations = Situation::all();
+        
         if (Auth::user()->mod_id === 1)
         {
             $tasks = Task::orderBy('priority_id', 'DESC')->orderBy('data_limit', 'ASC')->get();

@@ -53,9 +53,9 @@ Route::delete('/category/destroy/{category}', [CategoryController::class, 'destr
 
 // Route Mail
 Route::get('/sendMail/{task}', function (Task $task){
-    //return new newMail($task);
-    dispatch(new \App\Jobs\newMail($task))->delay(now());
+    //return new \App\Mail\newMail($task);
+    \App\Jobs\newMail::dispatch($task)->delay(now()->addSecond(10));
     //return Mail::send(new \App\Mail\newMail($task));
-});
+})->name('sendMail');
 
 require __DIR__.'/auth.php';

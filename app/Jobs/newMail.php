@@ -17,7 +17,7 @@ class newMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3;
+    public $tries = 1;
     private $task;
     /**
      * Create a new job instance.
@@ -38,14 +38,13 @@ class newMail implements ShouldQueue
     {
         $users = User::all();
         $emails = array();
-        foreach($users as $user){
+        /*foreach($users as $user){
             if($user->mod_id === 1){
                 array_push($emails, $user->email);
             }
-        };
+        };*/
+        //dd('handle Jobs'.$this->task);
         $email = new \App\Mail\newMail($this->task);
-        Mail::subject('Informações de Tarefas')
-            ->to($emails)
-            ->send($email);
+        Mail::send($email);
     }
 }
