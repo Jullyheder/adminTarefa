@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Task;;
-
-use App\Models\User;
+use App\Models\Task;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,20 +11,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class newMail implements ShouldQueue
+class newEmailDay implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
     public $tries = 1;
-    private $task;
+    private $tasks;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Task $task)
+    public function __construct($tasks)
     {
-        $this->task = $task;
+        $this->tasks = $tasks;
     }
 
     /**
@@ -36,7 +33,7 @@ class newMail implements ShouldQueue
      */
     public function handle()
     {
-        $email = new \App\Mail\newMail($this->task);
+        $email = new \App\Mail\newEmailDay($this->tasks);
         Mail::send($email);
     }
 }

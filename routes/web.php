@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 ;
+
+use App\Models\checkMail;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -56,6 +58,22 @@ Route::get('/sendMail/{task}', function (Task $task){
     //return new \App\Mail\newMail($task);
     \App\Jobs\newMail::dispatch($task)->delay(now()->addSecond(10));
     //return Mail::send(new \App\Mail\newMail($task));
-})->name('sendMail');
+})->name('sendMail')->middleware('auth');
+
+Route::get('/sendMailDay', function (){
+    $checkMailDay = CheckMail::where('dateMail', date('Y/m/d'))
+        ->select('checkSend')
+        ->get();
+    if ($checkMailDay->isEmpty()){
+        // enviar email
+        $task = Task::whereBetween('data_limit', [date('Y/m/d'), date('Y/m/d')])
+            ->whereNotIn('situation_id', [3, 4])
+            ->get();
+        if(!$task->isEmpty()){
+            //return new \App\Mail\newEmailDay($task);
+            \App\Jobs\newEmailDay::dispatch($task)->delay(now()->addSecond(10));
+        }
+    }
+})->name('sendMailDay');
 
 require __DIR__.'/auth.php';

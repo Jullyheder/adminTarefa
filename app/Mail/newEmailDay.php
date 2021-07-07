@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\checkMail;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -9,18 +10,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class newMail extends Mailable
+class newEmailDay extends Mailable
 {
     use Queueable, SerializesModels;
-    private $task;
+    private $tasks;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Task $task)
+    public function __construct($tasks)
     {
-        $this->task = $task;
+        $this->tasks = $tasks;
     }
 
     /**
@@ -30,11 +31,14 @@ class newMail extends Mailable
      */
     public function build()
     {
-        //Verificar se
-        $task = $this->task;
+        $tasks = $this->tasks;
         $users = User::where('mod_id', 1)->select('email')->get();
-        $this->subject('Informações de Tarefas');
+        $this->subject('Informações de Tarefas Expirando');
         $this->to($users);
-        return $this->markdown('mail.newMail', compact('task'));
+        checkMail::create([
+            'dateMail' => date('Y/m/d'),
+            'checkSend' => 1
+        ]);
+        return $this->markdown('mail.newMailDay', compact('tasks'));
     }
 }

@@ -112,6 +112,11 @@
         Priority = $('#searchPriority').val();
         Situation = $('#searchSituation').val();
         searchQuery();
+
+        $.ajax({
+            url: "{{ route('sendMailDay') }}",
+            type: "get",
+        });
     });
     $('td').click(function(){
         column = $(this).parent().children().index($(this));
@@ -136,11 +141,6 @@
         $.ajax({
             url: urlEmail,
             type: "get",
-            /*data: {
-                _token: CSRF_TOKEN,
-                situation_id: valueSelEmail,
-            },
-            dataType: 'json',*/
         });
     }
     function toTake(id){
