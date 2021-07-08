@@ -65,3 +65,41 @@
 .attDelete:hover{
     color: #1e212b;
 }
+
+/*------------media------------*/
+
+@media only screen and (max-width: 1023px) {
+    table{
+        font-size: 12px;
+    }
+    #notClick select {
+        font-size: 12px;
+    }
+    .attribute a, .attribute button {
+        font-size: 12px;
+        margin-right: 5px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .userRegister{
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    #searchName, #searchPriority, #searchSituation {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    table {
+        max-width: fit-content;
+        margin: 0 auto;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    table.table.table-bordered {
+        display: block !important
+    }
+    td#notClick {
+        min-width: 125px;
+    }
+}
+
